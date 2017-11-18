@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  Shipping info
+  <script type="text/javascript">
+		function swapImage(){
+    	var image = document.getElementById("imageToSwap");
+    	var sel = document.getElementById("mailType");
+		switch(sel.value){
+			case "Letters (Stamped)":
+			image.src = "/stamped.png";
+			break;
+		case "Letters (Metered)":
+			image.src = "/metered.png";
+			break;
+		case "Large Envelopes (Flats)":
+			image.src = "/flats.png";
+			break;
+		case "Parcels":
+			image.src = "parcels.png";
+			break;
+		}}
+	</script>
+</head>
+
+<body>
+	
+	<form action="/getRate" method="get">
+		<p>Enter the weight of the package (Oz)</p>
+		<input type="number" step="0.01" name="weight" id="weight">
+		<p>Select the type of package you are sending</p>
+		<select id="mailType" name="mailType" onchange="swapImage()">
+			<option value = "Letters (Stamped)" selected>Letters (Stamped)</option>
+	    	<option value = "Letters (Metered)">Letters (Metered)</option>
+			<option value = "Large Envelopes (Flats)">Large Envelopes (Flats)</option>
+    		<option value = "Parcels">Parcels</option>
+		</select>
+		<input type="submit" name="Result">
+	</form>
+	<img src="/stamped.png" id="imageToSwap">
+</body>
+</html>
