@@ -2,10 +2,9 @@ var express = require('express');
 var app = express();
 var url = require('url');
 /////////////////////////
-//var pg = require('pg');
 var Pool = require('pg-pool');
 var connectionString = "postgres://fqzxeaknsecoar:97ffe87ce0e96bb37c40b0997140f8b5eaeda55c35c7ff104383cfbd5d8f3703@ec2-54-221-246-84.compute-1.amazonaws.com:5432/dflhqrdgqqnkd2";
-const params = url.parse(process.env.DATABASE_URL);
+const params = url.parse(connectionString);
 const auth = params.auth.split(':');
 const config = {
   user: auth[0],
@@ -29,18 +28,34 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.get('/', function(request, response) {
-  response.render('pages/Project');
+	var parameters;
+	pool.connect().then(client => {
+  		client.query('SELECT * FROM mytemp').then(res => {
+    		//client.release();
+			//var page = res.rows[0].paragrapgh.toString();
+    		//console.log(res.rows[0].paragraph.toString());
+			//parameters = {page : page};
+			var page = "\"";
+			page += res.rows[0].paragraph;
+			page += "\"";
+			response.render('pages/Project', {page:page});
+			client.release();
+  		})
+  		.catch(e => {
+    		client.release()
+    		console.error('query error', e.message, e.stack)
+  		})
+	})
+  	
 });
 
 
-///////////////////////////
+/*//////////////////////////
 app.get('/db', function (request, response) {
-	//var client = new pg.Client(connectionString);
-	console.log("code made it here");
 	pool.connect().then(client => {
-  		client.query('select $1::text as name', ['pg-pool']).then(res => {
+  		client.query('SELECT * FROM mytemp').then(res => {
     		client.release()
-    		console.log('hello from', res.rows[0].name)
+    		console.log(res.rows[0].paragraph)
   		})
   		.catch(e => {
     		client.release()
@@ -50,7 +65,7 @@ app.get('/db', function (request, response) {
 	
     response.render('pages/Project');
 });
-////////////////////////////
+///////////////////////////*/
 
 function callback(error, result) {
 		// This is the callback function that will be called when the DB is done.

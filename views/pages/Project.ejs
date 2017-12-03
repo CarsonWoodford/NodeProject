@@ -6,8 +6,9 @@
 <link href="/stylesheets/project.css" rel="stylesheet" type="text/css" />
 <script>
 function setPage(replacement){
-	var div = document.getElementById('content')
-	div.innerhtml = content;
+	//console.log(replacement);
+	document.getElementById("content").innerhtml = "This worked";
+	console.log(document.getElementById('content').innerhtml);
 }
 </script>
 </head>
@@ -34,12 +35,14 @@ function setPage(replacement){
     <h1>Welcome!</h1>
     <p>Please select a tutorial from those listed below.(Will be replaced with links once I make actual tutorials)</p>
     <ul class="nav">
-      <li>DummyTutorial1</li>
-      <li>DummyTutorial2</li>
-      <li>DummyTutorial3</li>
-      <li>DummyTutorial4</li>
+      <li onclick="setPage()"><a href="#">DummyTutorial1</a></li>
+	  <li onclick="setPage()">DummyTutorial1</li>
+      <li onclick="setPage()"><a href="#">DummyTutorial2</a></li>
+      <li onclick="setPage()"><a href="#">DummyTutorial3</a></li>
+      <li onclick="setPage()"><a href="#">DummyTutorial4</a></li>
     </ul>
-    </div>
   </div>
+</div>
+
 </body>
 </html>
