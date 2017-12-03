@@ -1,12 +1,24 @@
 var express = require('express');
-
-/////////////////////////
-var pg = require('pg');
-var connectionString = "postgres://fqzxeaknsecoar:97ffe87ce0e96bb37c40b0997140f8b5eaeda55c35c7ff104383cfbd5d8f3703@ec2-54-221-246-84.compute-1.amazonaws.com:5432/dflhqrdgqqnkd2";
-/////////////////////////
-
 var app = express();
 var url = require('url');
+/////////////////////////
+//var pg = require('pg');
+var Pool = require('pg-pool');
+var connectionString = "postgres://fqzxeaknsecoar:97ffe87ce0e96bb37c40b0997140f8b5eaeda55c35c7ff104383cfbd5d8f3703@ec2-54-221-246-84.compute-1.amazonaws.com:5432/dflhqrdgqqnkd2";
+const params = url.parse(process.env.DATABASE_URL);
+const auth = params.auth.split(':');
+const config = {
+  user: auth[0],
+  password: auth[1],
+  host: params.hostname,
+  port: params.port,
+  database: params.pathname.split('/')[1],
+  ssl: true
+};
+const pool = new Pool(config);
+/////////////////////////
+
+
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -23,41 +35,20 @@ app.get('/', function(request, response) {
 
 ///////////////////////////
 app.get('/db', function (request, response) {
-	var client = new pg.Client(connectionString);
+	//var client = new pg.Client(connectionString);
 	console.log("code made it here");
-	client.connect(function(err) {
-		if (err) {
-			console.log("Error connecting to DB: ")
-			console.log(err);
-			callback(err, null);
-		}
-		console.log('Check1');
-
-		var sql = "SELECT paragraph FROM mytemp";
-		//var params = [id];
-
-		var query = client.query(sql, function(err, result) {
-			// we are now done getting the data from the DB, disconnect the client
-			client.end(function(err) {
-				if (err) throw err;
-			});
-			console.log('Check2');
-
-			if (err) {
-				console.log("Error in query: ")
-				console.log(err);
-				callback(err, null);
-			}
-			
-			console.log("Found result: " + JSON.stringify(result.rows));
-
-			// call whatever function the person that called us wanted, giving it
-			// the results that we have been compiling
-			callback(null, result.rows);
-		});
-	});
-  client.end();
-  response.render('pages/Project');
+	pool.connect().then(client => {
+  		client.query('select $1::text as name', ['pg-pool']).then(res => {
+    		client.release()
+    		console.log('hello from', res.rows[0].name)
+  		})
+  		.catch(e => {
+    		client.release()
+    		console.error('query error', e.message, e.stack)
+  		})
+	})
+	
+    response.render('pages/Project');
 });
 ////////////////////////////
 
