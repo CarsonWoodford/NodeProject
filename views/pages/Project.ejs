@@ -5,11 +5,46 @@
 <title>Untitled Document</title>
 <link href="/stylesheets/project.css" rel="stylesheet" type="text/css" />
 <script>
-function setPage(replacement){
-	//console.log(replacement);
-	document.getElementById("content").innerhtml = "This worked";
-	console.log(document.getElementById('content').innerhtml);
-}
+function setPage(location, bool){
+	document.getElementById("frame").src = location;
+	if(bool == 1){
+	document.getElementById("frame").style.display = "block";
+	document.getElementById("content").style.display = "none";
+	} else {
+	document.getElementById("frame").style.display = "none";
+	document.getElementById("content").style.display = "block";
+	}
+};
+function nextPage(){
+	switch(document.getElementById("frame").src){
+		case '<%= page[0].paragraph %>':
+		document.getElementById("frame").src = '<%= page[1].paragraph %>';
+		break;
+		case '<%= page[1].paragraph %>':
+		document.getElementById("frame").src = '<%= page[2].paragraph %>';
+		break;
+		case '<%= page[2].paragraph %>':
+		document.getElementById("frame").src = '<%= page[3].paragraph %>';
+		break;
+		case '<%= page[3].paragraph %>':
+		break;
+	}
+};
+function previousPage(){
+	switch(document.getElementById("frame").src){
+		case '<%= page[0].paragraph %>':
+		break;
+		case '<%= page[1].paragraph %>':
+		document.getElementById("frame").src = '<%= page[0].paragraph %>';
+		break;
+		case '<%= page[2].paragraph %>':
+		document.getElementById("frame").src = '<%= page[1].paragraph %>';
+		break;
+		case '<%= page[3].paragraph %>':
+		document.getElementById("frame").src = '<%= page[2].paragraph %>';
+		break;
+	}
+};
 </script>
 </head>
 
@@ -20,30 +55,28 @@ function setPage(replacement){
   </div>
   <div class="sidebar1">
     <ul class="nav">
-      <li><a href="#">Next Post</a></li>
-      <li><a href="#">Previous Post</a></li>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Link four</a></li>
+      <li><a href="#" onclick="nextPage()">Next Post</a></li>
+      <li><a href="#" onclick="previousPage()">Previous Post</a></li>
+      <li><a href="#" onclick="setPage(' ', 0)">Home</a></li>
+      <!--<li><a href="#">Link four</a></li>-->
     </ul>
   </div>
   
-  <iframe src="views/pages/homepage.html">
+  <iframe id="frame" src="">
   </iframe>
   
   
-  <!--
   <div class="content" id="content">
     <h1>Welcome!</h1>
-    <p>Please select a tutorial from those listed below.(Will be replaced with links once I make actual tutorials)</p>
+    <p>Please select a tutorial from those listed below.</p>
     <ul class="nav">
-      <li onclick="setPage()"><a href="#">DummyTutorial1</a></li>
-	  <li onclick="setPage()">DummyTutorial1</li>
-      <li onclick="setPage()"><a href="#">DummyTutorial2</a></li>
-      <li onclick="setPage()"><a href="#">DummyTutorial3</a></li>
-      <li onclick="setPage()"><a href="#">DummyTutorial4</a></li>
+      <li onclick="setPage('<%= page[0].paragraph %>', 1)"><a href="#">DummyTutorial1</a></li>
+	  <!--<li onclick="setPage()">DummyTutorial1</li>-->
+      <li onclick="setPage('<%= page[1].paragraph %>', 1)"><a href="#">DummyTutorial2</a></li>
+      <li onclick="setPage('<%= page[2].paragraph %>', 1)"><a href="#">DummyTutorial3</a></li>
+      <li onclick="setPage('<%= page[3].paragraph %>', 1)"><a href="#">DummyTutorial4</a></li>
     </ul>
   </div>
-  -->
 </div>
 
 </body>
