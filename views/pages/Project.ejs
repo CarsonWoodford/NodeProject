@@ -28,6 +28,8 @@ function nextPage(){
 		break;
 		case '<%= page[3].paragraph %>':
 		break;
+		default:
+		break;
 	}
 };
 function previousPage(){
@@ -42,6 +44,8 @@ function previousPage(){
 		break;
 		case '<%= page[3].paragraph %>':
 		document.getElementById("frame").src = '<%= page[2].paragraph %>';
+		break;
+		default:
 		break;
 	}
 };
